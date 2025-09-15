@@ -123,8 +123,8 @@ pixi run -e cxx <task-name>
 | `configure-itk` | Configure ITK build with CMake |
 | `build-itk` | Compile ITK libraries |
 | `configure-project` | Configure project against built ITK |
-| `build-project` | Compile project executables |
-| `test-project` | Run project test suite |
+| `build-src` | Compile project executables |
+| `test-src` | Run project test suite |
 
 ### Example Workflows
 
@@ -145,10 +145,10 @@ pixi run build
 **Work with C++ code:**
 ```bash
 # Build ITK and project code
-pixi run -e cxx build-project
+pixi run -e cxx build-src
 
 # Run tests
-pixi run -e cxx test-project
+pixi run -e cxx test-src
 ```
 
 **Create journal submission:**

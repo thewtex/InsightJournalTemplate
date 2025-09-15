@@ -62,7 +62,7 @@ dev = { depends-on = ["serve"] }
 clean = "myst clean"
 
 # Aggregate, standard build task
-build = { depends-on = ["build-manuscript", "test-project"] }
+build = { depends-on = ["build-manuscript", "test-src"] }
 
 [feature.cxx.dependencies]
 cmake = "*"
@@ -98,15 +98,15 @@ depends-on = ["build-itk"]
 outputs = ["build/project-build/CMakeFiles/**"]
 description = "Configure the project"
 
-[feature.cxx.tasks.build-project]
+[feature.cxx.tasks.build-src]
 cmd = "cmake --build build/project-build"
 depends-on = ["configure-project"]
 outputs = ["build/project-build/**"]
 description = "Build the project"
 
-[feature.cxx.tasks.test-project]
+[feature.cxx.tasks.test-src]
 cmd = "cd build/project-build && ctest"
-depends-on = ["build-project"]
+depends-on = ["build-src"]
 description = "Test the project"
 
 [environments]

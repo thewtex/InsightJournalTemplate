@@ -1,4 +1,4 @@
-name: Build MyST Document
+name: MyST Documents, Source Code
 
 on:
   push:
@@ -9,29 +9,29 @@ on:
 
 jobs:
   build-myst:
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-24.04
+
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
-      
+      uses: actions/checkout@v5
+
     - name: Setup Pixi
-      uses: prefix-dev/setup-pixi@v0.4.1
+      uses: prefix-dev/setup-pixi@v0.9.0
       with:
         pixi-version: latest
-        
+
     - name: Install dependencies
       run: pixi install
-      
+
     - name: Build HTML
       run: pixi run build-html
-      
+
     - name: Build PDF
       run: pixi run build-pdf
-      
-    - name: Build all formats
-      run: pixi run build-complete
-      
+
+    - name: Build MECA
+      run: pixi run build-meca
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -42,26 +42,26 @@ jobs:
         retention-days: 30
 
   build-source:
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-24.04
+
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
-      
+      uses: actions/checkout@v5
+
     - name: Setup Pixi
-      uses: prefix-dev/setup-pixi@v0.4.1
+      uses: prefix-dev/setup-pixi@v0.9.0
       with:
         pixi-version: latest
-        
+
     - name: Install dependencies
       run: pixi install
-      
+
     - name: Build source code
       run: pixi run build-src
-      
+
     - name: Run tests
       run: pixi run test-src
-      
+
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
@@ -75,26 +75,25 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-myst, build-source]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/myst'
-    
+
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
-      
+      uses: actions/checkout@v5
+
     - name: Setup Pixi
-      uses: prefix-dev/setup-pixi@v0.4.1
+      uses: prefix-dev/setup-pixi@v0.9.0
       with:
         pixi-version: latest
-        
+
     - name: Install dependencies
       run: pixi install
-      
+
     - name: Build for deployment
-      run: pixi run build-complete
-      
+      run: pixi run build-html
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./_build/html
-        cname: insight-journal-template.readthedocs.io
