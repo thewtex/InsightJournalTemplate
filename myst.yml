@@ -1,0 +1,95 @@
+version: 1
+project:
+  # IJ Article Publication ID -- keep 000 as a placeholder
+  id: insight-journal-000
+  title: Insight Journal MyST Template
+  description: A template for open science article submissions to the Insight Journal using MyST Markdown
+
+  authors:
+    - name: Galileo Galilei
+      email: galileo@pisa.university
+      affiliation: Pisa University
+      orcid: 0000-0000-0000-0001
+    - name: Giordano Bruno
+      email: giordano@rome.university
+      affiliation: Rome University
+      orcid: 0000-0000-0000-0002
+    - name: Anthony Leeuwenhoek
+      email: anthony@netherlands.university
+      affiliation: Netherlands Pragmatic University
+      orcid: 0000-0000-0000-0003
+  affiliations:
+    - id: Pisa University
+      name: Pisa University
+      address: Tower Drive, Pisa, Italy
+    - id: Rome University
+      name: Rome University
+      address: Inquisition Street, Rome, Italy
+    - id: Netherlands Pragmatic University
+      name: Netherlands Pragmatic University
+      address: Port Street, Netherlands
+
+  # License and access
+  license:
+    code: Apache-2.0
+    content: CC-BY-4.0
+  open_access: true
+
+  # Repository links
+  github: InsightSoftwareConsortium/InsightJournalTemplate
+
+  # Publication venue
+  venue:
+    title: Insight Journal
+    url: https://insight-journal.org
+
+  # Export configurations
+  exports:
+    - format: typst
+      template: lapreprint-typst
+      output: exports/manuscript.pdf
+    - format: pdf
+      template: arxiv_nips
+      article_type: research-article
+      output: exports/manuscript-arxiv-format.pdf
+    - format: tex
+      template: arxiv_nips
+      output: exports/manuscript.tex
+    - format: docx
+      output: exports/manuscript.docx
+    - format: cff
+    - format: meca
+      output: exports/manuscript.meca.zip
+
+  toc:
+    - file: docs/index.md
+
+  # Additional resources, e.g. data and code, for reproducibility
+  resources:
+    - src/**
+    - data/**
+
+  # Bibliography
+  bibliography:
+    - docs/references.bib
+
+  # Requirements for reproducibility
+  requirements:
+    - pixi.toml
+
+# Website configuration
+site:
+  title: Insight Journal Template
+  favicon: docs/assets/favicon.ico
+  nav:
+    - title: Article
+      url: /index.html
+    - title: Source Code
+      url: https://github.com/InsightSoftwareConsortium/InsightJournalTemplate
+
+  # Site options
+  options:
+    logo: docs/assets/logo-insight-journal-square-light.png
+    logo_dark: docs/assets/logo-insight-journal-square-dark.png
+    logo_text: Insight Journal Template
+    hide_title_on_index: true

@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: Please cite the following works when using this project.
+title: Insight Journal MyST Template
+authors:
+  - family-names: Galilei
+    given-names: Galileo
+    affiliation: Pisa University
+    address: Tower Drive, Pisa, Italy
+    orcid: 0000-0000-0000-0001
+    email: galileo@pisa.university
+  - family-names: Bruno
+    given-names: Giordano
+    affiliation: Rome University
+    address: Inquisition Street, Rome, Italy
+    orcid: 0000-0000-0000-0002
+    email: giordano@rome.university
+  - family-names: Leeuwenhoek
+    given-names: Anthony
+    affiliation: Netherlands Pragmatic University
+    address: Port Street, Netherlands
+    orcid: 0000-0000-0000-0003
+    email: anthony@netherlands.university
+contact:
+  - family-names: Galilei
+    given-names: Galileo
+    affiliation: Pisa University
+    address: Tower Drive, Pisa, Italy
+    orcid: 0000-0000-0000-0001
+    email: galileo@pisa.university
+license: CC-BY-4.0
+license-url: https://creativecommons.org/licenses/by/4.0/
+repository: https://github.com/InsightSoftwareConsortium/InsightJournalTemplate

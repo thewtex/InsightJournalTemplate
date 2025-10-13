@@ -1,0 +1,114 @@
+[project]
+name = "insight-journal-template"
+description = "A template for open science article submissions to the Insight Journal using MyST Markdown"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+
+[dependencies]
+# MyST ecosystem
+mystmd = ">=1.6.1,<2"
+jupyter-book = "*"
+
+# Python scientific stack
+python = ">=3.11"
+numpy = "*"
+matplotlib = "*"
+scipy = "*"
+
+# Development tools
+jupyterlab = "*"
+
+# Optional: for notebook execution
+ipykernel = "*"
+
+# Build manuscript PDF
+typst = ">=0.13.1,<0.14"
+
+[pypi-dependencies]
+# ITK Python Package
+itk = "*"
+
+[tasks]
+build-html = "myst build --html"
+# Does not require a LaTeX installation
+build-pdf = "myst build --typst"
+# Requires a LaTeX installation
+build-arxiv = "myst build --pdf"
+build-tex = "myst build --tex"
+build-docx = "myst build --docx"
+build-cff = "myst build --cff"
+
+# Combined tasks
+build-manuscript = { depends-on = ["build-html", "build-pdf", "build-cff"] }
+build-pdfs = { depends-on = ["build-pdf", "build-arxiv"] }
+build-meca = { cmd = "myst build --meca", depends-on = ["build-html", "build-pdfs", "build-tex", "build-docx", "build-cff"] }
+
+# Verify MECA bundle reproducibility
+verify-meca = { cmd = '''
+  myst build --meca &&
+  rm -rf exports/manuscript.meca &&
+  unzip exports/manuscript.meca.zip -d exports/manuscript.meca &&
+  cd exports/manuscript.meca/bundle &&
+  pixi run build &&
+  pixi run test
+''', depends-on = ["build-meca"], description = "Build MECA export and verify bundle reproducibility" }
+
+# Start development server
+start = "myst start"
+# Alias
+dev = { depends-on = ["serve"] }
+
+# Clean build artifacts
+clean = "myst clean"
+
+# Aggregate, standard build task
+build = { depends-on = ["build-manuscript", "test-src"] }
+
+[feature.cxx.dependencies]
+cmake = "*"
+make = "*"
+ninja = "*"
+
+[feature.cxx.tasks.clone-itk]
+cmd = ["stat", "build/ITK", ">/dev/null", "||",
+  "git", "clone",
+    "https://github.com/InsightSoftwareConsortium/ITK",
+    "build/ITK"]
+outputs = ["build/ITK/LICENSE"]
+description = "Fetch ITK's source code"
+
+[feature.cxx.tasks.configure-itk]
+cmd = '''cmake -Bbuild/ITK-build -Sbuild/ITK -GNinja
+  -DBUILD_EXAMPLES:BOOL=OFF
+  -DBUILD_TESTING:BOOL=OFF'''
+depends-on = ["clone-itk"]
+outputs = ["build/ITK-build/CMakeFiles/**"]
+description = "Configure ITK"
+
+[feature.cxx.tasks.build-itk]
+cmd = "cmake --build build/ITK-build"
+depends-on = ["configure-itk"]
+outputs = ["build/ITK-build/**"]
+description = "Build ITK"
+
+[feature.cxx.tasks.configure-project]
+cmd = '''cmake -Bbuild/project-build -Ssrc -GNinja
+ -DITK_DIR=$(pwd)/build/ITK-build'''
+depends-on = ["build-itk"]
+outputs = ["build/project-build/CMakeFiles/**"]
+description = "Configure the project"
+
+[feature.cxx.tasks.build-src]
+cmd = "cmake --build build/project-build"
+depends-on = ["configure-project"]
+outputs = ["build/project-build/**"]
+description = "Build the project"
+
+[feature.cxx.tasks.test-src]
+cmd = "cd build/project-build && ctest"
+depends-on = ["build-src"]
+description = "Test the project"
+
+[environments]
+default = { features = [], solve-group = "default" }
+cxx = { features = ["cxx"], solve-group = "default" }
